@@ -1,6 +1,6 @@
 <?php
 
-require_once "db.config.php"
+require_once "db.config.php";
 
 class Database
 {
@@ -11,7 +11,7 @@ class Database
         $res = $connection->prepare($sql);
         $res->execute($data);
 
-        if(!$res)
+        if(!$res || !$connection)
             throw new Exception($connection->errorInfo());
 
         return $res;
