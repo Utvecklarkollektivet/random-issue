@@ -18,10 +18,18 @@
 		}
 
 		public static function spin() {
-			$res = Database::Query("SELECT * FROM issues WHERE active = false AND open = true ORDER BY RAND() LIMIT 1")->fetch();
-			$issue = Issue::load($res);
-			$issue->active = true;
-			$issue->save();
+			if(Issue::canSpin()) {
+				$res = Database::Query("SELECT * FROM issues WHERE active = false AND open = true ORDER BY RAND() LIMIT 1")->fetch();
+				if($res) {
+					$issue = Issue::load($res);
+					$issue->active = true;
+					$issue->save();	
+				}
+				else {
+					return null;
+				}
+				
+			}
 		}
 
 		private static function load($data) {
@@ -45,8 +53,9 @@
 
 		public function close(){
 			$this->active = false;
-			$this->closed = true;
+			$this->open = false;
 			$this->save();
+			Issue::spin();
 		}
 		
 		public static function find($id) {
@@ -65,8 +74,10 @@
 				return Issue::load($res);
 			}
 			else {
-				Issue::spin();
-				return Issue::getActive();
+				if(Issue::spin())
+					return Issue::getActive();
+				else
+					return null;
 			}
 		}
 
