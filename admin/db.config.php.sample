@@ -1,0 +1,10 @@
+<?php
+	
+	class DBConfig {
+		public static $HOST = "";
+		public static $DATABASE = "";
+		public static $USERNAME = "";
+		public static $PASSWORD = "";
+	}
+
+?>
